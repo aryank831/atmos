@@ -107,7 +107,7 @@
             responseBox.style.display = "block";
             responseBox.innerText = "Listening...";
 
-            fetch("http://127.0.0.1:5000/api/listen")  // Ensure Flask is running!
+            fetch("https://your-render-app.onrender.com/api/listen")  // Ensure Flask is running!
                 .then(response => response.json())
                 .then(data => {
                     responseBox.innerText = You said: "${data.command}"\nAtmos: ${data.response};
