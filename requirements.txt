@@ -1,7 +1,7 @@
 flask
 flask-cors
 speechrecognition
-pyaudio
+pyaudio @ https://people.csail.mit.edu/hubert/pyaudio/packages/pyaudio-0.2.11-cp39-cp39-linux_x86_64.whl
 pyttsx3
 requests
 google-generativeai
