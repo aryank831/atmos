@@ -5,4 +5,5 @@ pyttsx3
 google-generativeai
 requests
 gunicorn
-pyaudio @ https://github.com/jleb/pyaudio/releases/download/v0.2.11/pyaudio-0.2.11-cp39-cp39-manylinux1_x86_64.whl
+portaudio
+pyaudio
