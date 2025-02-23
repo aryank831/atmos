@@ -1,0 +1,8 @@
+flask
+flask-cors
+speechrecognition
+pyaudio
+pyttsx3
+requests
+google-generativeai
+gunicorn
