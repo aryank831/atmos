@@ -2,21 +2,26 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import speech_recognition as sr
 import os
-import pyttsx3  # Cross-platform TTS
+import win32com.client  # Windows TTS (for speaking)
+import pyttsx3  # Backup TTS
 import google.generativeai as genai
 import requests
-import pyaudio  
-
+import webbrowser
 
 # Flask app setup
-app = Flask(__name__)
+app = Flask(_name_)
 CORS(app)  # Enable CORS for API requests
 
 # Set Gemini API key
 genai.configure(api_key="AIzaSyBTxpFrER0nGFSGiCwFm4tE9cbbBMfg_g8")
 
 # Initialize TTS (Text-to-Speech)
-speaker = pyttsx3.init()
+try:
+    speaker = win32com.client.Dispatch("SAPI.SpVoice")
+    win32_tts = True
+except Exception:
+    speaker = pyttsx3.init()
+    win32_tts = False
 
 # Global variable to track listening state
 listening_active = True  # Starts in listening mode
@@ -24,8 +29,11 @@ listening_active = True  # Starts in listening mode
 # Function to handle speaking
 def speak(text):
     print(f"Atmos: {text}")  # Debugging log
-    speaker.say(text)
-    speaker.runAndWait()
+    if win32_tts:
+        speaker.Speak(text)
+    else:
+        speaker.say(text)
+        speaker.runAndWait()
 
 # Function to query Gemini API
 def ask_gemini(prompt):
@@ -62,6 +70,20 @@ def execute_task(command):
         speak("For which city do you want to know the weather?")
         city = recognize_speech()
         response = get_weather(city)
+    elif "open youtube" in command:
+        speak("What would you like to search for?")
+        search_query = recognize_speech()
+        url = f"https://www.youtube.com/results?search_query={search_query.replace(' ', '+')}"
+        webbrowser.open(url)
+        response = f"Searching YouTube for {search_query}."
+    elif "shutdown" in command:
+        speak("Shutting down the system.")
+        os.system("shutdown /s /t 1")
+        response = "System shutdown initiated."
+    elif "restart" in command:
+        speak("Restarting the system.")
+        os.system("shutdown /r /t 1")
+        response = "System restart initiated."
     else:
         response = ask_gemini(command)
     
@@ -112,6 +134,13 @@ def toggle_listening():
     state = "on" if listening_active else "off"
     return jsonify({"message": f"Listening turned {state}."})
 
-if __name__ == "__main__":
+# API to stop execution
+@app.route("/api/stop", methods=["POST"])
+def stop_execution():
+    global listening_active
+    listening_active = False
+    return jsonify({"message": "Listening stopped."})
+
+if _name_ == "_main_":
     print("Atmos Assistant is running...")
     app.run(debug=True, host="0.0.0.0", port=5000)
