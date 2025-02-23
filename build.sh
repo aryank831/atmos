@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e  # Stop on errors
+set -e  # Exit on error
 
 # Install system dependencies
 apt-get update && apt-get install -y portaudio19-dev
