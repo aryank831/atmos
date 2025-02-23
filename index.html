@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atmos AI Assistant</title>
+    <style>
+        body {
+            background: radial-gradient(circle at center, #002244, #000000);
+            color: white;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .techfire {
+            width: 200px;
+            height: 200px;
+            border: 10px solid cyan;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 50px cyan;
+            background: radial-gradient(circle, rgba(0, 255, 255, 0.2), transparent);
+        }
+        .inner-circle {
+            width: 100px;
+            height: 100px;
+            border: 6px solid cyan;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 30px cyan;
+        }
+        .core {
+            width: 50px;
+            height: 50px;
+            background-color: cyan;
+            border-radius: 50%;
+            box-shadow: 0 0 35px cyan, 0 0 60px cyan inset;
+        }
+        h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-shadow: 0 0 10px cyan;
+        }
+        p {
+            font-size: 1.2rem;
+            color: lightgray;
+            text-shadow: 0 0 5px cyan;
+        }
+        .mic-btn {
+            margin-top: 20px;
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle, rgba(0, 255, 255, 0.8), rgba(0, 255, 255, 0.3));
+            border: 3px solid cyan;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 15px cyan;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .mic-btn img {
+            width: 35px;
+            height: 35px;
+        }
+        .response {
+            margin-top: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+            box-shadow: 0 0 15px cyan;
+            text-shadow: 0 0 5px cyan;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="techfire">
+            <div class="inner-circle">
+                <div class="core"></div>
+            </div>
+        </div>
+        <h1>I'm Atmos</h1>
+        <p>Your Intelligent Virtual Assistant</p>
+        <button class="mic-btn" onclick="startListening()">
+            <img src="https://www.svgrepo.com/show/1902/microphone.svg" alt="Mic Icon">
+        </button>
+        <div class="response" id="responseBox">Listening...</div>
+    </div>
+    <script>
+        function startListening() {
+            let responseBox = document.getElementById("responseBox");
+            responseBox.style.display = "block";
+            responseBox.innerText = "Listening...";
+
+            fetch("http://127.0.0.1:5000/api/listen")  // Ensure Flask is running!
+                .then(response => response.json())
+                .then(data => {
+                    responseBox.innerText = `You said: "${data.command}"\nAtmos: ${data.response}`;
+                })
+                .catch(error => {
+                    responseBox.innerText = "Error: Unable to connect to Atmos.";
+                    console.error("Error:", error);
+                });
+        }
+    </script>
+</body>
+</html>
