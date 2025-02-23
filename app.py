@@ -2,8 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import speech_recognition as sr
 import os
-import win32com.client  # Windows TTS (for speaking)
-import pyttsx3  # Backup TTS
+import pyttsx3  # Cross-platform TTS
 import google.generativeai as genai
 import requests
 import sounddevice as sd
@@ -16,12 +15,7 @@ CORS(app)  # Enable CORS for API requests
 genai.configure(api_key="AIzaSyBTxpFrER0nGFSGiCwFm4tE9cbbBMfg_g8")
 
 # Initialize TTS (Text-to-Speech)
-try:
-    speaker = win32com.client.Dispatch("SAPI.SpVoice")
-    win32_tts = True
-except Exception:
-    speaker = pyttsx3.init()
-    win32_tts = False
+speaker = pyttsx3.init()
 
 # Global variable to track listening state
 listening_active = True  # Starts in listening mode
@@ -29,11 +23,8 @@ listening_active = True  # Starts in listening mode
 # Function to handle speaking
 def speak(text):
     print(f"Atmos: {text}")  # Debugging log
-    if win32_tts:
-        speaker.Speak(text)
-    else:
-        speaker.say(text)
-        speaker.runAndWait()
+    speaker.say(text)
+    speaker.runAndWait()
 
 # Function to query Gemini API
 def ask_gemini(prompt):
