@@ -6,6 +6,7 @@ import win32com.client  # Windows TTS (for speaking)
 import pyttsx3  # Backup TTS
 import google.generativeai as genai
 import requests
+import sounddevice as sd
 
 # Flask app setup
 app = Flask(__name__)
