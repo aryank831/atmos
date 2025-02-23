@@ -1,7 +1,7 @@
 flask
 flask-cors
+requests
+google-generativeai
 speechrecognition
 pyttsx3
-google-generativeai
-requests
-
+pyaudio  
