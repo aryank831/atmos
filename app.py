@@ -5,6 +5,7 @@ import os
 import pyttsx3  # Cross-platform TTS
 import google.generativeai as genai
 import requests
+import pyaudio  
 
 
 # Flask app setup
