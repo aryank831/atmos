@@ -1,8 +1,7 @@
 flask
 flask-cors
 speechrecognition
-sounddevice
 pyttsx3
-requests
 google-generativeai
-gunicorn
+requests
+sounddevice
