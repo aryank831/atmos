@@ -2,24 +2,29 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import speech_recognition as sr
 import os
-import win32com.client  # Windows TTS (for speaking)
+import platform
 import pyttsx3  # Backup TTS
 import google.generativeai as genai
 import requests
 import webbrowser
 
 # Flask app setup
-app = Flask(_name_)
+app = Flask(__name__)  # ✅ Fixed __name__
 CORS(app)  # Enable CORS for API requests
 
 # Set Gemini API key
 genai.configure(api_key="AIzaSyBTxpFrER0nGFSGiCwFm4tE9cbbBMfg_g8")
 
-# Initialize TTS (Text-to-Speech)
-try:
-    speaker = win32com.client.Dispatch("SAPI.SpVoice")
-    win32_tts = True
-except Exception:
+# Initialize TTS (Text-to-Speech) based on OS
+if platform.system() == "Windows":
+    try:
+        import win32com.client
+        speaker = win32com.client.Dispatch("SAPI.SpVoice")
+        win32_tts = True
+    except Exception:
+        speaker = pyttsx3.init()
+        win32_tts = False
+else:  # Linux (Render) fallback
     speaker = pyttsx3.init()
     win32_tts = False
 
@@ -29,11 +34,8 @@ listening_active = True  # Starts in listening mode
 # Function to handle speaking
 def speak(text):
     print(f"Atmos: {text}")  # Debugging log
-    if win32_tts:
-        speaker.Speak(text)
-    else:
-        speaker.say(text)
-        speaker.runAndWait()
+    speaker.say(text)
+    speaker.runAndWait()
 
 # Function to query Gemini API
 def ask_gemini(prompt):
@@ -141,6 +143,7 @@ def stop_execution():
     listening_active = False
     return jsonify({"message": "Listening stopped."})
 
-if _name_ == "_main_":
+# Run the app using Gunicorn in Render
+if __name__ == "__main__":  # ✅ Fixed __name__
     print("Atmos Assistant is running...")
     app.run(debug=True, host="0.0.0.0", port=5000)
