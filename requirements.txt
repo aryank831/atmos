@@ -4,4 +4,4 @@ speechrecognition
 pyttsx3
 google-generativeai
 requests
-sounddevice
+
